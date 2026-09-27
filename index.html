@@ -1,0 +1,1441 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asesmen Sumatif Tengah Semester - MTs Mu'allimin NU</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #1a535c;
+            --secondary-color: #4ecdc4;
+            --accent-color: #f7fff7;
+            --dark-color: #2f3e46;
+            --danger-color: #ff6b6b;
+            --warning-color: #ffe66d;
+            --success-color: #2a9d8f;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f4f7f6;
+            color: #333;
+        }
+
+        .navbar-custom {
+            background-color: var(--primary-color);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .header-logo {
+            max-height: 60px;
+            object-fit: contain;
+        }
+
+        .card-custom {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            background: #fff;
+        }
+
+        .btn-primary-custom {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary-custom:hover {
+            background-color: #133c43;
+            color: white;
+        }
+
+        .badge-kkm {
+            font-size: 0.9rem;
+            padding: 6px 12px;
+            border-radius: 20px;
+        }
+
+        .timer-box {
+            background: #e74c3c;
+            color: white;
+            font-weight: 700;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+
+        .q-number-btn {
+            width: 40px;
+            height: 40px;
+            margin: 3px;
+            font-weight: 600;
+            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .q-number-btn.answered {
+            background-color: var(--success-color) !important;
+            color: white !important;
+        }
+
+        .q-number-btn.current {
+            border: 3px solid var(--primary-color) !important;
+            font-weight: 800;
+        }
+
+        .q-number-btn.flagged {
+            background-color: var(--warning-color) !important;
+            color: #000 !important;
+        }
+
+        .option-box {
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .option-box:hover {
+            border-color: var(--secondary-color);
+            background-color: #f8fdff;
+        }
+
+        .option-box.selected {
+            border-color: var(--primary-color);
+            background-color: #e8f4f5;
+        }
+
+        .match-select {
+            border-radius: 8px;
+            padding: 8px;
+        }
+
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+            .print-only {
+                display: block !important;
+            }
+            .card-custom {
+                box-shadow: none;
+                border: 1px solid #ccc;
+            }
+        }
+
+        .print-only {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header / Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom py-3">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="#">
+                <img id="appLogo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Kementerian_Agama_Republik_Indonesia_logo.svg/1200px-Kementerian_Agama_Republik_Indonesia_logo.svg.png" alt="Logo" class="header-logo me-3 bg-white p-1 rounded">
+                <div>
+                    <h5 class="m-0 fw-bold" id="appHeaderTitle">MTs MU'ALLIMIN NU</h5>
+                    <small class="text-light" id="appHeaderSubtitle">Asesmen Sumatif Tengah Semester (ASTS) - Akidah Akhlak Kelas VII</small>
+                </div>
+            </a>
+            <div class="ms-auto d-flex align-items-center no-print">
+                <span id="userInfoBadge" class="badge bg-light text-dark me-2 d-none"></span>
+                <button id="btnLogout" class="btn btn-outline-light btn-sm d-none" onclick="logout()"><i class="fas fa-sign-out-alt me-1"></i>Keluar</button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container my-4">
+
+        <!-- SCREEN 1: LOGIN -->
+        <div id="screenLogin" class="row justify-content-center">
+            <div class="col-md-6 col-lg-5">
+                <div class="card card-custom p-4">
+                    <div class="text-center mb-4">
+                        <i class="fas fa-file-signature fa-3x text-success mb-2"></i>
+                        <h4 class="fw-bold text-dark">Portal Ujian Siswa & Admin</h4>
+                        <p class="text-muted small">Penyusun: <strong>Amirotul Kayyisah, S.Pd.</strong></p>
+                    </div>
+
+                    <!-- Tab Switcher -->
+                    <ul class="nav nav-pills nav-justified mb-3" id="pills-tab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active fw-semibold" id="tab-siswa-tab" data-bs-toggle="pill" data-bs-target="#tab-siswa" type="button"><i class="fas fa-user-graduate me-1"></i>Siswa</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link fw-semibold" id="tab-admin-tab" data-bs-toggle="pill" data-bs-target="#tab-admin" type="button"><i class="fas fa-user-shield me-1"></i>Admin / Guru</button>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content" id="pills-tabContent">
+                        <!-- Login Siswa -->
+                        <div class="tab-pane fade show active" id="tab-siswa" role="tabpanel">
+                            <form onsubmit="loginSiswa(event)">
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Nama Lengkap Siswa</label>
+                                    <input type="text" id="siswaNama" class="form-control" placeholder="Contoh: Ahmad Fauzi" required>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label fw-bold">Kelas</label>
+                                        <select id="siswaKelas" class="form-select" required>
+                                            <option value="VII A">VII A</option>
+                                            <option value="VII B">VII B</option>
+                                            <option value="VII C">VII C</option>
+                                            <option value="VII D">VII D</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label fw-bold">No. Presensi (Password)</label>
+                                        <input type="number" id="siswaPresensi" class="form-control" placeholder="Contoh: 15" required min="1">
+                                    </div>
+                                </div>
+                                <div class="alert alert-info py-2 small">
+                                    <i class="fas fa-info-circle me-1"></i> Username menggunakan Nama Lengkap dan Password menggunakan Nomor Presensi. Maksimal pengerjaan <strong>2 kali</strong>.
+                                </div>
+                                <button type="submit" class="btn btn-primary-custom w-100 py-2 fw-bold"><i class="fas fa-paper-plane me-1"></i> Masuk Ujian Siswa</button>
+                            </form>
+                        </div>
+
+                        <!-- Login Admin -->
+                        <div class="tab-pane fade" id="tab-admin" role="tabpanel">
+                            <form onsubmit="loginAdmin(event)">
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Username Admin</label>
+                                    <input type="text" id="adminUser" class="form-control" placeholder="Username (Standar: admin)" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Password Admin</label>
+                                    <input type="password" id="adminPass" class="form-control" placeholder="Password (Standar: admin123)" required>
+                                </div>
+                                <button type="submit" class="btn btn-dark w-100 py-2 fw-bold"><i class="fas fa-lock me-1"></i> Masuk Mode Admin</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SCREEN 2: DASHBOARD SISWA -->
+        <div id="screenSiswaDash" class="row justify-content-center d-none">
+            <div class="col-md-8">
+                <div class="card card-custom p-4">
+                    <h4 class="fw-bold border-bottom pb-2 text-success"><i class="fas fa-id-card me-2"></i>Konfirmasi Data Peserta Ujian</h4>
+                    <table class="table table-borderless my-3">
+                        <tr><td width="30%" class="fw-bold">Nama Lengkap</td><td>: <span id="dashNama">-</span></td></tr>
+                        <tr><td class="fw-bold">Kelas</td><td>: <span id="dashKelas">-</span></td></tr>
+                        <tr><td class="fw-bold">No. Presensi</td><td>: <span id="dashPresensi">-</span></td></tr>
+                        <tr><td class="fw-bold">Mata Pelajaran</td><td>: Akidah Akhlak</td></tr>
+                        <tr><td class="fw-bold">Materi Asesmen</td><td>: BAB I (Akidah Islam), BAB II (Sifat-sifat Allah), BAB III (Tobat, Taat, Istiqomah, Ikhlas)</td></tr>
+                        <tr><td class="fw-bold">Jumlah Soal</td><td>: 35 Soal (15 PG, 10 PG Kompleks, 10 Menjodohkan)</td></tr>
+                        <tr><td class="fw-bold">Alokasi Waktu</td><td>: 90 Menit</td></tr>
+                        <tr><td class="fw-bold">KKM</td><td>: <span class="badge bg-warning text-dark">80</span></td></tr>
+                        <tr><td class="fw-bold">Status Percobaan</td><td>: <span id="dashAttempt" class="badge bg-primary">0 / 2</span></td></tr>
+                    </table>
+
+                    <div id="dashRules" class="alert alert-warning">
+                        <strong>Petunjuk Pengerjaan:</strong>
+                        <ul class="mb-0 ps-3">
+                            <li>Soal Pilihan Ganda: Pilih satu jawaban yang paling tepat.</li>
+                            <li>Soal Pilihan Ganda Kompleks: Jawab dengan memilih lebih dari satu jawaban yang benar.</li>
+                            <li>Soal Menjodohkan: Pilih pasangan yang tepat pada daftar dropdown.</li>
+                            <li>Waktu akan berjalan mundur selama 90 menit setelah Anda menekan tombol mulai.</li>
+                        </ul>
+                    </div>
+
+                    <div class="d-flex justify-content-between mt-3">
+                        <button class="btn btn-secondary" onclick="logout()"><i class="fas fa-arrow-left me-1"></i>Kembali</button>
+                        <button id="btnStartExam" class="btn btn-success fw-bold px-4 py-2" onclick="startExam()"><i class="fas fa-play me-1"></i> Mulai Mengerjakan Soal</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SCREEN 3: LEMBAR UJIAN (CBT INTERFACE) -->
+        <div id="screenExam" class="d-none">
+            <!-- Info Bar Top -->
+            <div class="card card-custom p-3 mb-3">
+                <div class="row align-items-center">
+                    <div class="col-md-6">
+                        <span class="fw-bold text-primary"><i class="fas fa-user-circle me-1"></i> <span id="examStudentName">Siswa</span> (<span id="examStudentClass">VII</span>)</span>
+                    </div>
+                    <div class="col-md-6 text-end">
+                        <span class="timer-box"><i class="fas fa-stopwatch me-1"></i> Sisa Waktu: <span id="timerText">90:00</span></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <!-- Left: Question Panel -->
+                <div class="col-md-8">
+                    <div class="card card-custom p-4">
+                        <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-3">
+                            <h5 class="fw-bold m-0" id="qHeader">Soal No. 1</h5>
+                            <span class="badge bg-info text-dark" id="qTypeBadge">Pilihan Ganda</span>
+                        </div>
+
+                        <!-- Question Body -->
+                        <div id="qContent" class="mb-4 lead fs-6">
+                            <!-- Soal dinamis dimuat disini -->
+                        </div>
+
+                        <!-- Answer Choices -->
+                        <div id="qOptionsContainer" class="mb-4">
+                            <!-- Opsi dinamis dimuat disini -->
+                        </div>
+
+                        <!-- Bottom Nav -->
+                        <div class="d-flex justify-content-between align-items-center pt-3 border-top">
+                            <button id="btnPrev" class="btn btn-outline-secondary" onclick="prevQuestion()"><i class="fas fa-chevron-left me-1"></i>Sebelumnya</button>
+                            <button id="btnFlag" class="btn btn-outline-warning" onclick="toggleFlag()"><i class="fas fa-flag me-1"></i>Ragu-Ragu</button>
+                            <button id="btnNext" class="btn btn-primary-custom" onclick="nextQuestion()">Selanjutnya <i class="fas fa-chevron-right ms-1"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: Navigation Grid -->
+                <div class="col-md-4">
+                    <div class="card card-custom p-3 mb-3">
+                        <h6 class="fw-bold border-bottom pb-2"><i class="fas fa-th me-2"></i>Navigasi Soal</h6>
+                        <div id="qGrid" class="d-flex flex-wrap">
+                            <!-- Grid Nomor 1-35 -->
+                        </div>
+                        <div class="mt-3 border-top pt-2 small text-muted">
+                            <span class="badge bg-success me-1">&nbsp;</span>Sudah Dijawab
+                            <span class="badge bg-warning text-dark me-1 ms-2">&nbsp;</span>Ragu-Ragu
+                            <span class="badge bg-light text-dark border me-1 ms-2">&nbsp;</span>Belum Dijawab
+                        </div>
+                        <button class="btn btn-danger w-100 mt-3 fw-bold" onclick="confirmSubmit()"><i class="fas fa-check-circle me-1"></i>Selesai & Sampaikan Ujian</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SCREEN 4: HASIL UJIAN SISWA -->
+        <div id="screenResult" class="row justify-content-center d-none">
+            <div class="col-md-9">
+                <div class="card card-custom p-4">
+                    <!-- Print Header Only -->
+                    <div class="print-only text-center mb-4">
+                        <h3 class="fw-bold">MTs MU'ALLIMIN NU</h3>
+                        <h5>LEMBAR HASIL ASESMEN SUMATIF TENGAH SEMESTER</h5>
+                        <p>Mata Pelajaran: Akidah Akhlak | Guru Penyusun: Amirotul Kayyisah, S.Pd.</p>
+                        <hr>
+                    </div>
+
+                    <div class="text-center mb-4 no-print">
+                        <i class="fas fa-award fa-4x text-warning mb-2"></i>
+                        <h3 class="fw-bold">Hasil Asesmen Sumatif Tengah Semester</h3>
+                        <p class="text-muted">Mata Pelajaran: Akidah Akhlak Kelas VII</p>
+                    </div>
+
+                    <!-- Ringkasan Hasil -->
+                    <div class="row text-center mb-4">
+                        <div class="col-md-4 mb-2">
+                            <div class="p-3 border rounded bg-light">
+                                <small class="text-muted d-block">Skor Perolehan</small>
+                                <span class="display-5 fw-bold text-primary" id="resScore">0</span>
+                                <small class="d-block text-muted">/ 100</small>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <div class="p-3 border rounded bg-light">
+                                <small class="text-muted d-block">Status KKM (80)</small>
+                                <span id="resKkmBadge" class="badge fs-5 mt-2">TUNTAS</span>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <div class="p-3 border rounded bg-light">
+                                <small class="text-muted d-block">Percobaan Pengerjaan</small>
+                                <span class="fs-4 fw-bold text-dark mt-1 d-block" id="resAttemptText">1 / 2</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h5 class="fw-bold border-bottom pb-2">Identitas Siswa</h5>
+                    <table class="table table-sm table-borderless mb-4">
+                        <tr><td width="25%" class="fw-bold">Nama Lengkap</td><td>: <span id="resNama">-</span></td></tr>
+                        <tr><td class="fw-bold">Kelas</td><td>: <span id="resKelas">-</span></td></tr>
+                        <tr><td class="fw-bold">No. Presensi</td><td>: <span id="resPresensi">-</span></td></tr>
+                        <tr><td class="fw-bold">Waktu Selesai</td><td>: <span id="resTimestamp">-</span></td></tr>
+                    </table>
+
+                    <div class="d-flex justify-content-between align-items-center mb-3 no-print">
+                        <h5 class="fw-bold m-0">Rincian Jawaban</h5>
+                        <button class="btn btn-outline-primary btn-sm" onclick="window.print()"><i class="fas fa-print me-1"></i> Cetak / Download Transkrip PDF</button>
+                    </div>
+
+                    <div id="resDetailList" class="mb-4">
+                        <!-- Rincian Jawaban per nomor -->
+                    </div>
+
+                    <div class="d-flex justify-content-between no-print">
+                        <button class="btn btn-secondary" onclick="logout()"><i class="fas fa-sign-out-alt me-1"></i>Keluar</button>
+                        <button id="btnReAttempt" class="btn btn-warning fw-bold d-none" onclick="reAttemptExam()"><i class="fas fa-redo me-1"></i> Coba Mengerjakan Lagi (Kesempatan Ke-2)</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SCREEN 5: DASHBOARD ADMIN -->
+        <div id="screenAdmin" class="d-none">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h3 class="fw-bold text-dark"><i class="fas fa-user-cog me-2"></i>Panel Kontrol Admin / Guru</h3>
+                <span class="badge bg-dark fs-6">Amirotul Kayyisah, S.Pd.</span>
+            </div>
+
+            <ul class="nav nav-tabs mb-3" id="adminTab" role="tablist">
+                <li class="nav-item">
+                    <button class="nav-link active fw-bold" id="tab-rekap-t" data-bs-toggle="tab" data-bs-target="#tab-rekap"><i class="fas fa-list-alt me-1"></i>Rekap Nilai Siswa</button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link fw-bold" id="tab-editsoal-t" data-bs-toggle="tab" data-bs-target="#tab-editsoal"><i class="fas fa-edit me-1"></i>Kelola / Edit Soal (35)</button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link fw-bold" id="tab-ujicoba-t" data-bs-toggle="tab" data-bs-target="#tab-ujicoba" onclick="adminUjiCoba()"><i class="fas fa-vial me-1"></i>Mode Uji Coba Soal</button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link fw-bold" id="tab-pengaturan-t" data-bs-toggle="tab" data-bs-target="#tab-pengaturan"><i class="fas fa-cog me-1"></i>Pengaturan Header & Pass</button>
+                </li>
+            </ul>
+
+            <div class="tab-content">
+                <!-- TAB 1: REKAP NILAI SISWA -->
+                <div class="tab-pane fade show active" id="tab-rekap">
+                    <div class="card card-custom p-3">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="fw-bold m-0">Daftar Hasil Nilai Asesmen Siswa</h5>
+                            <div>
+                                <button class="btn btn-success btn-sm me-2" onclick="exportToCSV()"><i class="fas fa-file-excel me-1"></i> Download CSV / Excel</button>
+                                <button class="btn btn-danger btn-sm" onclick="clearAllResults()"><i class="fas fa-trash me-1"></i> Hapus Semua Rekap</button>
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped align-middle">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Nama Lengkap</th>
+                                        <th>Kelas</th>
+                                        <th>No. Presensi</th>
+                                        <th>Skor (0-100)</th>
+                                        <th>Status KKM</th>
+                                        <th>Percobaan Ke-</th>
+                                        <th>Waktu Pengerjaan</th>
+                                        <th>Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="adminTableBody">
+                                    <!-- Baris data siswa dimuat dinamis -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 2: EDIT SOAL -->
+                <div class="tab-pane fade" id="tab-editsoal">
+                    <div class="card card-custom p-3">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="fw-bold m-0">Kelola & Edit 35 Soal Asesmen</h5>
+                            <button class="btn btn-secondary btn-sm" onclick="resetDefaultQuestions()"><i class="fas fa-undo me-1"></i> Reset Ke Soal Default</button>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="list-group" id="adminQList" style="max-height: 500px; overflow-y: auto;">
+                                    <!-- Daftar 35 nomor -->
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <div id="adminQEditor" class="p-3 border rounded bg-light">
+                                    <p class="text-muted">Pilih nomor soal di sebelah kiri untuk diedit.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 3: UJI COBA (Langsung berpindah ke exam via JS) -->
+                <div class="tab-pane fade" id="tab-ujicoba">
+                    <div class="card card-custom p-4 text-center">
+                        <i class="fas fa-vial fa-3x text-primary mb-3"></i>
+                        <h5>Mode Uji Coba Soal (Akses Guru/Admin)</h5>
+                        <p class="text-muted">Di mode ini, Anda dapat mencoba menjawab 35 soal seolah-olah sebagai siswa tanpa batas kuota percobaan dan hasil tidak akan merusak rekap siswa.</p>
+                        <button class="btn btn-primary-custom px-4 py-2 fw-bold" onclick="startAdminUjiCoba()"><i class="fas fa-play me-1"></i> Mulai Uji Coba Ujian</button>
+                    </div>
+                </div>
+
+                <!-- TAB 4: PENGATURAN LOGO & PASS -->
+                <div class="tab-pane fade" id="tab-pengaturan">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <div class="card card-custom p-3">
+                                <h5 class="fw-bold border-bottom pb-2">Pengaturan Logo & Header</h5>
+                                <form onsubmit="saveHeaderConfig(event)">
+                                    <div class="mb-3">
+                                        <label class="form-label">Nama Madrasah / Sekolah</label>
+                                        <input type="text" id="cfgTitle" class="form-control" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Sub-Judul Header</label>
+                                        <input type="text" id="cfgSubtitle" class="form-control" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">URL Logo Madrasah</label>
+                                        <input type="url" id="cfgLogo" class="form-control" required>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary-custom btn-sm"><i class="fas fa-save me-1"></i>Simpan Perubahan Header</button>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="card card-custom p-3">
+                                <h5 class="fw-bold border-bottom pb-2">Ganti Password Admin</h5>
+                                <form onsubmit="changeAdminPassword(event)">
+                                    <div class="mb-3">
+                                        <label class="form-label">Password Admin Baru</label>
+                                        <input type="password" id="newAdminPass" class="form-control" required minlength="4">
+                                    </div>
+                                    <button type="submit" class="btn btn-dark btn-sm"><i class="fas fa-key me-1"></i>Perbarui Password</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        /* ==========================================================================
+           DATA DEFAULT SOAL (35 SOAL KONTEKSTUAL MATERI BAB I, BAB II, BAB III)
+           ========================================================================== */
+        const DEFAULT_QUESTIONS = [
+            // --- 15 SOAL PILIHAN GANDA (1-15) ---
+            {
+                id: 1, type: 'pg', bab: 'BAB I',
+                question: 'Ahmad selalu meyakini dalam hatinya bahwa Allah SWT adalah Pencipta semesta alam. Keyakinan tersebut ia diucapkan dengan lisan dan dibuktikan dengan rajin beribadah. Sikap Ahmad mencerminkan pengertian dari...',
+                options: ['Akidah Islam', 'Syariat Islam', 'Muamalah', 'Akhlak Mahmudah'],
+                answer: 0
+            },
+            {
+                id: 2, type: 'pg', bab: 'BAB I',
+                question: 'Setiap Muslim wajib memiliki pegangan hidup yang kuat agar tidak mudah terombang-ambing oleh pengaruh negatif. Landasan utama akidah Islam yang sah dan benar adalah...',
+                options: ['Al-Qur\'an dan Hadis', 'Buku Filsafat dan Logika', 'Tradisi dan Adat Istiadat', 'Pendapat Tokoh Masyarakat'],
+                answer: 0
+            },
+            {
+                id: 3, type: 'pg', bab: 'BAB I',
+                question: 'Ketika menghadapi cobaan berupa kesulitan belajar, Fatimah tidak pernah berputus asa atau mendatangi dukun, melainkan terus berdoa dan berusaha. Hal ini sesuai dengan tujuan akidah Islam yaitu...',
+                options: ['Memperoleh kebahagiaan duniawi semata', 'Memurni keikhlasan dan memelihara dari kemusyrikan', 'Mendapatkan pujian dari teman-teman', 'Menghindari tugas-tugas sekolah'],
+                answer: 1
+            },
+            {
+                id: 4, type: 'pg', bab: 'BAB I',
+                question: 'Hubungan antara Iman, Islam, dan Ihsan sering diibaratkan sebagai sebuah bangunan rumah. Pernyataan yang menggambarkan kedudukan Iman dalam perumpamaan tersebut adalah...',
+                options: ['Atap dan hiasan rumah', 'Pondasi dasar tempat berdirinya bangunan', 'Dinding pelindung rumah', 'Pintu masuk ke dalam rumah'],
+                answer: 1
+            },
+            {
+                id: 5, type: 'pg', bab: 'BAB I',
+                question: 'Rizal selalu melaksanan salat dengan khusyuk baik saat berada di depan gurunya maupun saat sendirian di kamarnya, karena ia merasa senantiasa diawasi oleh Allah SWT. Perilaku Rizal ini mencerminkan tingkatan...',
+                options: ['Iman', 'Islam', 'Ihsan', 'Taqlid'],
+                answer: 2
+            },
+            {
+                id: 6, type: 'pg', bab: 'BAB II',
+                question: 'Seorang ilmuwan mengamati keteraturan peredaran planet dan tata surya yang sangat presisi. Adanya alam semesta beserta isinya membuktikan bahwa Allah SWT itu ada. Sifat wajib bagi Allah yang sesuai adalah...',
+                options: ['Wujud', 'Qidam', 'Baqa\'', 'Wahdaniyah'],
+                answer: 0
+            },
+            {
+                id: 7, type: 'pg', bab: 'BAB II',
+                question: 'Sifat-sifat wajib bagi Allah dikelompokkan menjadi empat pembagian. Sifat yang berhubungan khusus dengan Dzat Allah SWT saja (seperti Wujud) dinamakan sifat...',
+                options: ['Salbiyah', 'Nafsiyah', 'Ma\'ani', 'Ma\'nawiyah'],
+                answer: 1
+            },
+            {
+                id: 8, type: 'pg', bab: 'BAB II',
+                question: 'Sifat Salbiyah adalah sifat yang menolak segala sifat yang tidak layak bagi Allah SWT. Di bawah ini yang merupakan contoh sifat Salbiyah adalah...',
+                options: ['Qudrat dan Iradat', 'Mukhalafatu lil hawaditsi dan Qiyamuhu binafsihi', 'Hayat dan Sama\'', 'Hayyan dan Muridan'],
+                answer: 1
+            },
+            {
+                id: 9, type: 'pg', bab: 'BAB II',
+                question: 'Siti menyadari bahwa penglihatan manusia sangat terbatas oleh jarak dan penghalang, sedangkan Penglihatan Allah SWT melingkupi segala sesuatu tanpa batas. Sifat Ma\'ani yang dimiliki Allah SWT tersebut adalah...',
+                options: ['Basar', 'Sama\'', 'Kalam', '\'Ilmu'],
+                answer: 0
+            },
+            {
+                id: 10, type: 'pg', bab: 'BAB II',
+                question: 'Mustahil bagi Allah SWT memiliki sifat Huduts (baru) karena Allah bersifat Qidam. Arti dari sifat wajib Qidam adalah...',
+                options: ['Maha Kekal', 'Maha Dulu / Awal tanpa permulaan', 'Berdiri Sendiri', 'Maha Esa'],
+                answer: 1
+            },
+            {
+                id: 11, type: 'pg', bab: 'BAB III',
+                question: 'Suatu hari Zaid tidak sengaja merusak buku perpustakaan madrasah. Ia merasa menyesal, segera meminta maaf kepada petugas perpustakaan, dan berjanji tidak mengulanginya. Sikap Zaid merupakan penerapan dari...',
+                options: ['Tobat', 'Istiqomah', 'Ikhlas', 'Tawakal'],
+                answer: 0
+            },
+            {
+                id: 12, type: 'pg', bab: 'BAB III',
+                question: 'Manakah dari pernyataan berikut yang menggambarkan wujud ketaatan kepada Allah SWT dan Rasul-Nya dalam kehidupan sehari-hari di madrasah?',
+                options: ['Melaksanakan salat Dzuhur berjamaah tepat waktu', 'Mengerjakan tugas hanya jika diawasi oleh guru', 'Mengikuti upacara hanya ketika ada razia', 'Membantu teman memberikan jawaban saat ujian'],
+                answer: 0
+            },
+            {
+                id: 13, type: 'pg', bab: 'BAB III',
+                question: 'Nabila selalu konsisten membaca Al-Qur\'an setiap selesai salat Subuh sebanyak 2 halaman, meskipun ia sedang sibuk atau lelah. Sikap konsisten dan teguh pendirian Nabila disebut...',
+                options: ['Ikhlas', 'Istiqomah', 'Tobat', 'Rida'],
+                answer: 1
+            },
+            {
+                id: 14, type: 'pg', bab: 'BAB III',
+                question: 'Budi menyisihkan sebagian uang saku harian untuk diinfakkan ke kotak amal masjid tanpa memberitahukan kepada teman-temannya agar tidak disanjung. Perilaku Budi menunjukkan sikap...',
+                options: ['Taat', 'Istiqomah', 'Ikhlas', 'Tobat'],
+                answer: 2
+            },
+            {
+                id: 15, type: 'pg', bab: 'BAB III',
+                question: 'Salah satu dampak positif bagi remaja Muslim yang senantiasa membiasakan perilaku taat dan istiqomah dalam kehidupan sehari-hari adalah...',
+                options: ['Memperoleh kebanggaan di mata manusia', 'Memiliki ketenangan jiwa dan terhindar dari rasa cemas', 'Menjadi orang yang ditakuti di lingkungan sekolah', 'Mendapatkan dispensasi dari tugas sekolah'],
+                answer: 1
+            },
+
+            // --- 10 SOAL PILIHAN GANDA KOMPLEKS (16-25) ---
+            {
+                id: 16, type: 'pgk', bab: 'BAB I',
+                question: 'Pilihlah beberapa pernyataan yang BENAR mengenai hakikat dan tujuan Akidah Islam dalam kehidupan sehari-hari! (Jawaban benar lebih dari satu)',
+                options: [
+                    'Akidah berfungsi sebagai pedoman moral dan arah hidup seorang Muslim',
+                    'Akidah Islam memperbolehkan mempercayai ramalan nasib demi masa depan',
+                    'Menjauhkan diri dari perbuatan syirik dan penyimpangan keyakinan',
+                    'Memupuk rasa keikhlasan dalam setiap amal ibadah'
+                ],
+                answer: [0, 2, 3]
+            },
+            {
+                id: 17, type: 'pgk', bab: 'BAB I',
+                question: 'Mana sajakah yang termasuk dalam tiga pilar utama ajaran Islam yang saling terikat satu sama lain? (Jawaban benar lebih dari satu)',
+                options: ['Iman', 'Islam', 'Ihsan', 'Insan'],
+                answer: [0, 1, 2]
+            },
+            {
+                id: 18, type: 'pgk', bab: 'BAB II',
+                question: 'Manakah di antara sifat-sifat Allah berikut yang termasuk ke dalam kelompok Sifat Salbiyah? (Jawaban benar lebih dari satu)',
+                options: [
+                    'Qidam (Maha Dahulu)',
+                    'Baqa\' (Maha Kekal)',
+                    'Mukhalafatu lil hawaditsi (Beda dengan makhluk)',
+                    'Qudrat (Maha Kuasa)'
+                ],
+                answer: [0, 1, 2]
+            },
+            {
+                id: 19, type: 'pgk', bab: 'BAB II',
+                question: 'Pilihlah wujud perilaku siswa di sekolah yang mencerminkan keimanan kepada sifat Allah Basar (Maha Melihat) dan Sama\' (Maha Mendengar)! (Jawaban benar lebih dari satu)',
+                options: [
+                    'Tidak menyotek saat ujian meskipun tidak ada pengawas',
+                    'Menjaga lisan dari ucapan ghibah atau perkataan kotor',
+                    'Berbuat baik hanya apabila dilihat oleh Guru Akidah',
+                    'Menebarkan rasa aman dan senantiasa jujur'
+                ],
+                answer: [0, 1, 3]
+            },
+            {
+                id: 20, type: 'pgk', bab: 'BAB II',
+                question: 'Sifat Ma\'ani adalah sifat abstrak yang ada pada Dzat Allah. Pilihlah sifat-sifat yang masuk dalam kelompok Sifat Ma\'ani! (Jawaban benar lebih dari satu)',
+                options: ['\'Ilmu (Maha Mengetahui)', 'Hayat (Maha Hidup)', 'Kalam (Maha Berfirman)', 'Wujud (Maha Ada)'],
+                answer: [0, 1, 2]
+            },
+            {
+                id: 21, type: 'pgk', bab: 'BAB III',
+                question: 'Agar tobat seorang hamba atas kesalahan yang dilakukan kepada Allah SWT diterima (Tobat Nasuha), syarat-syarat yang harus dipenuhi adalah... (Jawaban benar lebih dari satu)',
+                options: [
+                    'Menyesali kesalahan yang telah dilakukan',
+                    'Menghentikan perbuatan dosa tersebut seketika',
+                    'Berjanji dengan sungguh-sungguh tidak mengulanginya lagi',
+                    'Menunggu sampai usia tua baru bertobat'
+                ],
+                answer: [0, 1, 2]
+            },
+            {
+                id: 22, type: 'pgk', bab: 'BAB III',
+                question: 'Pilihlah contoh-contoh tindakan taat kepada guru dan orang tua bagi seorang siswa MTs! (Jawaban benar melebih dari satu)',
+                options: [
+                    'Mendengarkan nasehat guru dengan penuh rasa hormat',
+                    'Membantu pekerjaan rumah tangga sesuai kemampuan',
+                    'Membantah perintah orang tua jika bertentangan dengan keinginan pribadi',
+                    'Mengerjakan PR dan tugas sekolah tepat waktu'
+                ],
+                answer: [0, 1, 3]
+            },
+            {
+                id: 23, type: 'pgk', bab: 'BAB III',
+                question: 'Sikap istiqomah sangat penting dimiliki setiap pelajar. Ciri-ciri pelajar yang memiliki sikap istiqomah adalah... (Jawaban benar lebih dari satu)',
+                options: [
+                    'Tetap rajin belajar baik ada ulangan maupun tidak ada ulangan',
+                    'Semangat beribadah hanya saat berada di lingkungan madrasah',
+                    'Teguh mempertahankan nilai-nilai kejujuran di manapun berada',
+                    'Pantang menyerah saat menghadapi kesulitan memahami pelajaran'
+                ],
+                answer: [0, 2, 3]
+            },
+            {
+                id: 24, type: 'pgk', bab: 'BAB III',
+                question: 'Ikhlas artinya memurnikan niat hanya karena Allah. Pernyataan mana saja yang merusak keikhlasan dalam beramal? (Jawaban benar lebih dari satu)',
+                options: [
+                    'Riya\' (ingin dipuji orang lain)',
+                    'Sum\'ah (ingin didengar kebaikannya oleh orang lain)',
+                    'Lillahi Ta\'ala (mengharapkan keridaan Allah)',
+                    'Ujub (bangga diri atas kehebatannya)'
+                ],
+                answer: [0, 1, 3]
+            },
+            {
+                id: 25, type: 'pgk', bab: 'BAB III',
+                question: 'Keutamaan dan keuntungan membiasakan perilaku Tobat, Taat, Istiqomah, dan Ikhlas adalah... (Jawaban benar lebih dari satu)',
+                options: [
+                    'Mendapatkan ampunan dan rasa tenang dalam hati',
+                    'Dicintai oleh Allah SWT, orang tua, dan guru',
+                    'Menjadi pribadi yang disiplin dan dipercayai sesama',
+                    'Bebas dari segala kewajiban ibadah di masa depan'
+                ],
+                answer: [0, 1, 2]
+            },
+
+            // --- 10 SOAL MENJODOHKAN (26-35) ---
+            {
+                id: 26, type: 'match', bab: 'BAB I',
+                question: 'Jodohkan istilah Akidah secara bahasa dengan pasangan maknanya yang tepat!',
+                left: 'Pengertian Akidah secara Bahasa',
+                rightOptions: ['Ikatan / Simpul yang Kokoh', 'Keyakinan Tanpa Bukti', 'Aturan Hukum', 'Tradisi Lama'],
+                answer: 'Ikatan / Simpul yang Kokoh'
+            },
+            {
+                id: 27, type: 'match', bab: 'BAB I',
+                question: 'Jodohkan tingkatan pilar agama berikut dengan definisi utamanya!',
+                left: 'Konsep Ihsan',
+                rightOptions: ['Beribadah seakan-akan melihat Allah SWT', 'Mengaku dengan lisan saja', 'Menghafal rukun Islam', 'Membayar zakat fitrah'],
+                answer: 'Beribadah seakan-akan melihat Allah SWT'
+            },
+            {
+                id: 28, type: 'match', bab: 'BAB II',
+                question: 'Jodohkan jenis kelompok sifat Allah dengan sifat wajib yang sesuai!',
+                left: 'Kelompok Sifat Nafsiyah',
+                rightOptions: ['Wujud', 'Qidam', 'Qudrat', 'Kaunuhu Qadiran'],
+                answer: 'Wujud'
+            },
+            {
+                id: 29, type: 'match', bab: 'BAB II',
+                question: 'Jodohkan sifat Wajib Allah berikut dengan sifat Mustahil pasangannya!',
+                left: 'Mukhalafatu lil hawaditsi (Berbeda dari makhluk)',
+                rightOptions: ['Mumatsalatu lil hawaditsi (Serupa dengan makhluk)', 'Huduts (Baru)', 'Fana\' (Rusak)', 'Ajzun (Lemah)'],
+                answer: 'Mumatsalatu lil hawaditsi (Serupa dengan makhluk)'
+            },
+            {
+                id: 30, type: 'match', bab: 'BAB II',
+                question: 'Jodohkan Sifat Ma\'ani Allah dengan artinya yang benar!',
+                left: 'Sifat Iradat',
+                rightOptions: ['Maha Berkehendak', 'Maha Kuasa', 'Maha Mengetahui', 'Maha Hidup'],
+                answer: 'Maha Berkehendak'
+            },
+            {
+                id: 31, type: 'match', bab: 'BAB III',
+                question: 'Jodohkan istilah sifat terpuji dengan penjelasannya!',
+                left: 'Tobat Nasuha',
+                rightOptions: ['Tobat yang murni dan tidak mengulangi dosa', 'Tobat saat terkena musibah saja', 'Meminta maaf tanpa penyesalan', 'Janji manis di depan guru'],
+                answer: 'Tobat yang murni dan tidak mengulangi dosa'
+            },
+            {
+                id: 32, type: 'match', bab: 'BAB III',
+                question: 'Jodohkan penerapan sikap Taat dalam kehidupan siswa!',
+                left: 'Taat kepada Aturan Sekolah',
+                rightOptions: ['Datang tepat waktu dan memakai seragam rapi', 'Datang terlambat tanpa alasan', 'Mengerjakan tugas saat dimarahi', 'Apatis terhadap tata tertib'],
+                answer: 'Datang tepat waktu dan memakai seragam rapi'
+            },
+            {
+                id: 33, type: 'match', bab: 'BAB III',
+                question: 'Jodohkan istilah sikap teguh pendirian berikut!',
+                left: 'Istiqomah',
+                rightOptions: ['Konsisten berbuat baik secara terus-menerus', 'Suka berpindah-pindah niat', 'Beramal jika diberi imbalan', 'Menyerah saat gagal'],
+                answer: 'Konsisten berbuat baik secara terus-menerus'
+            },
+            {
+                id: 34, type: 'match', bab: 'BAB III',
+                question: 'Jodohkan lawan kata (penghilang) dari sikap Ikhlas!',
+                left: 'Perilaku Riya\'',
+                rightOptions: ['Pamer perbuatan baik agar dipuji manusia', 'Niat karena Allah', 'Sikap jujur dan polos', 'Rasa takut dosa'],
+                answer: 'Pamer perbuatan baik agar dipuji manusia'
+            },
+            {
+                id: 35, type: 'match', bab: 'BAB III',
+                question: 'Jodohkan batas standar kelulusan nilai asesmen ini!',
+                left: 'KKM (Kriteria Ketuntasan Minimal)',
+                rightOptions: ['Nilai Minimal 80', 'Nilai Minimal 70', 'Nilai Minimal 75', 'Nilai Minimal 85'],
+                answer: 'Nilai Minimal 80'
+            }
+        ];
+
+        /* ==========================================================================
+           STATE APLIKASI & LOCAL STORAGE
+           ========================================================================== */
+        let questions = JSON.parse(localStorage.getItem('asts_questions')) || DEFAULT_QUESTIONS;
+        let adminPass = localStorage.getItem('asts_admin_pass') || 'admin123';
+        let headerConfig = JSON.parse(localStorage.getItem('asts_header')) || {
+            title: "MTs MU'ALLIMIN NU",
+            subtitle: "Asesmen Sumatif Tengah Semester (ASTS) - Akidah Akhlak Kelas VII",
+            logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Kementerian_Agama_Republik_Indonesia_logo.svg/1200px-Kementerian_Agama_Republik_Indonesia_logo.svg.png"
+        };
+        let studentResults = JSON.parse(localStorage.getItem('asts_results')) || [];
+
+        // State Sesi Saat Ini
+        let currentUser = null; // { role: 'siswa'|'admin', nama, kelas, presensi, isAdminTrial: bool }
+        let currentAnswers = {}; // { qId: answerValue }
+        let currentFlags = {}; // { qId: boolean }
+        let currentQIndex = 0;
+        let timerInterval = null;
+        let timeRemaining = 90 * 60; // 90 menit dalam detik
+
+        /* ==========================================================================
+           INITIALIZATION & ROUTING
+           ========================================================================== */
+        document.addEventListener('DOMContentLoaded', () => {
+            applyHeaderConfig();
+            renderAdminQList();
+        });
+
+        function applyHeaderConfig() {
+            document.getElementById('appHeaderTitle').innerText = headerConfig.title;
+            document.getElementById('appHeaderSubtitle').innerText = headerConfig.subtitle;
+            document.getElementById('appLogo').src = headerConfig.logo;
+            document.getElementById('cfgTitle').value = headerConfig.title;
+            document.getElementById('cfgSubtitle').value = headerConfig.subtitle;
+            document.getElementById('cfgLogo').value = headerConfig.logo;
+        }
+
+        function showScreen(screenId) {
+            ['screenLogin', 'screenSiswaDash', 'screenExam', 'screenResult', 'screenAdmin'].forEach(id => {
+                document.getElementById(id).classList.add('d-none');
+            });
+            document.getElementById(screenId).classList.remove('d-none');
+        }
+
+        /* ==========================================================================
+           AUTHENTICATION
+           ========================================================================== */
+        function loginSiswa(e) {
+            e.preventDefault();
+            const nama = document.getElementById('siswaNama').value.trim();
+            const kelas = document.getElementById('siswaKelas').value;
+            const presensi = document.getElementById('siswaPresensi').value.trim();
+
+            if (!nama || !presensi) {
+                alert('Mohon isi nama lengkap dan nomor presensi!');
+                return;
+            }
+
+            // Hitung berapa kali siswa ini sudah mengerjakan
+            const attempts = studentResults.filter(r => r.nama.toLowerCase() === nama.toLowerCase() && r.kelas === kelas).length;
+
+            if (attempts >= 2) {
+                alert(`Maaf, ${nama} (Kelas ${kelas}) sudah menggunakan batas maksimal 2 kali kesempatan mengerjakan.`);
+                return;
+            }
+
+            currentUser = {
+                role: 'siswa',
+                nama: nama,
+                kelas: kelas,
+                presensi: presensi,
+                attemptCount: attempts + 1
+            };
+
+            // Update Tampilan Dashboard Siswa
+            document.getElementById('dashNama').innerText = currentUser.nama;
+            document.getElementById('dashKelas').innerText = currentUser.kelas;
+            document.getElementById('dashPresensi').innerText = currentUser.presensi;
+            document.getElementById('dashAttempt').innerText = `${currentUser.attemptCount} / 2`;
+
+            document.getElementById('userInfoBadge').innerText = `Siswa: ${currentUser.nama}`;
+            document.getElementById('userInfoBadge').classList.remove('d-none');
+            document.getElementById('btnLogout').classList.remove('d-none');
+
+            showScreen('screenSiswaDash');
+        }
+
+        function loginAdmin(e) {
+            e.preventDefault();
+            const u = document.getElementById('adminUser').value.trim();
+            const p = document.getElementById('adminPass').value.trim();
+
+            if (u === 'admin' && p === adminPass) {
+                currentUser = { role: 'admin', nama: 'Administrator' };
+                document.getElementById('userInfoBadge').innerText = `Mode: Admin / Guru`;
+                document.getElementById('userInfoBadge').classList.remove('d-none');
+                document.getElementById('btnLogout').classList.remove('d-none');
+
+                renderAdminTable();
+                showScreen('screenAdmin');
+            } else {
+                alert('Username atau Password Admin Salah!');
+            }
+        }
+
+        function logout() {
+            currentUser = null;
+            clearInterval(timerInterval);
+            document.getElementById('userInfoBadge').classList.add('d-none');
+            document.getElementById('btnLogout').classList.add('d-none');
+            showScreen('screenLogin');
+        }
+
+        /* ==========================================================================
+           EXAM ENGINE (PENGERJAAN SOAL)
+           ========================================================================== */
+        function startExam() {
+            currentAnswers = {};
+            currentFlags = {};
+            currentQIndex = 0;
+            timeRemaining = 90 * 60; // 90 Menit
+
+            document.getElementById('examStudentName').innerText = currentUser.nama;
+            document.getElementById('examStudentClass').innerText = currentUser.kelas;
+
+            showScreen('screenExam');
+            renderQGrid();
+            loadQuestion(0);
+            startTimer();
+        }
+
+        function startTimer() {
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                timeRemaining--;
+                const minutes = Math.floor(timeRemaining / 60);
+                const seconds = timeRemaining % 60;
+                document.getElementById('timerText').innerText = 
+                    `${minutes < 10 ? '0'+minutes : minutes}:${seconds < 10 ? '0'+seconds : seconds}`;
+
+                if (timeRemaining <= 0) {
+                    clearInterval(timerInterval);
+                    alert('Waktu pengerjaan telah habis! Sistem akan mengumpulkan jawaban Anda secara otomatis.');
+                    submitExam();
+                }
+            }, 1000);
+        }
+
+        function renderQGrid() {
+            const gridContainer = document.getElementById('qGrid');
+            gridContainer.innerHTML = '';
+
+            questions.forEach((q, idx) => {
+                const btn = document.createElement('div');
+                btn.className = `q-number-btn border bg-light ${idx === currentQIndex ? 'current' : ''}`;
+                btn.innerText = idx + 1;
+                btn.id = `qbtn-${idx}`;
+                btn.onclick = () => loadQuestion(idx);
+                gridContainer.appendChild(btn);
+            });
+            updateQGridStatus();
+        }
+
+        function updateQGridStatus() {
+            questions.forEach((q, idx) => {
+                const btn = document.getElementById(`qbtn-${idx}`);
+                if (!btn) return;
+
+                btn.classList.remove('answered', 'flagged', 'current');
+                if (idx === currentQIndex) btn.classList.add('current');
+
+                if (currentFlags[q.id]) {
+                    btn.classList.add('flagged');
+                } else if (hasAnswered(q.id)) {
+                    btn.classList.add('answered');
+                }
+            });
+        }
+
+        function hasAnswered(qId) {
+            const ans = currentAnswers[qId];
+            if (ans === undefined || ans === null) return false;
+            if (Array.isArray(ans)) return ans.length > 0;
+            if (typeof ans === 'string') return ans !== '';
+            return true;
+        }
+
+        function loadQuestion(index) {
+            currentQIndex = index;
+            const q = questions[index];
+
+            document.getElementById('qHeader').innerText = `Soal No. ${index + 1} dari ${questions.length}`;
+            let typeText = 'Pilihan Ganda';
+            if (q.type === 'pgk') typeText = 'Pilihan Ganda Kompleks (Jawaban > 1)';
+            if (q.type === 'match') typeText = 'Menjodohkan';
+            document.getElementById('qTypeBadge').innerText = typeText;
+
+            document.getElementById('qContent').innerHTML = `<p class="fw-bold mb-3">${q.question}</p>`;
+
+            const optsContainer = document.getElementById('qOptionsContainer');
+            optsContainer.innerHTML = '';
+
+            // Type 1: Pilihan Ganda (Single Select)
+            if (q.type === 'pg') {
+                const labels = ['A', 'B', 'C', 'D'];
+                q.options.forEach((opt, optIdx) => {
+                    const isSelected = currentAnswers[q.id] === optIdx;
+                    const box = document.createElement('div');
+                    box.className = `option-box ${isSelected ? 'selected' : ''}`;
+                    box.onclick = () => {
+                        currentAnswers[q.id] = optIdx;
+                        loadQuestion(currentQIndex);
+                        updateQGridStatus();
+                    };
+                    box.innerHTML = `<span class="fw-bold me-2">${labels[optIdx]}.</span> ${opt}`;
+                    optsContainer.appendChild(box);
+                });
+            }
+            // Type 2: Pilihan Ganda Kompleks (Multi Select / Checkbox)
+            else if (q.type === 'pgk') {
+                const selectedArr = currentAnswers[q.id] || [];
+                q.options.forEach((opt, optIdx) => {
+                    const isChecked = selectedArr.includes(optIdx);
+                    const box = document.createElement('div');
+                    box.className = `option-box ${isChecked ? 'selected' : ''}`;
+                    box.onclick = () => {
+                        let cur = currentAnswers[q.id] ? [...currentAnswers[q.id]] : [];
+                        if (cur.includes(optIdx)) {
+                            cur = cur.filter(i => i !== optIdx);
+                        } else {
+                            cur.push(optIdx);
+                        }
+                        currentAnswers[q.id] = cur;
+                        loadQuestion(currentQIndex);
+                        updateQGridStatus();
+                    };
+                    box.innerHTML = `<input type="checkbox" class="form-check-input me-2" ${isChecked ? 'checked' : ''}> <span class="fw-semibold">${opt}</span>`;
+                    optsContainer.appendChild(box);
+                });
+            }
+            // Type 3: Menjodohkan (Matching)
+            else if (q.type === 'match') {
+                const curAns = currentAnswers[q.id] || '';
+                const box = document.createElement('div');
+                box.className = 'p-3 bg-light border rounded';
+
+                let selectHTML = `<label class="form-label fw-bold mb-2">Pernyataan: ${q.left}</label>`;
+                selectHTML += `<select class="form-select match-select mt-2" onchange="saveMatchAnswer(${q.id}, this.value)">`;
+                selectHTML += `<option value="">-- Pilih Pasangan Jawaban yang Tepat --</option>`;
+                q.rightOptions.forEach(opt => {
+                    selectHTML += `<option value="${opt}" ${curAns === opt ? 'selected' : ''}>${opt}</option>`;
+                });
+                selectHTML += `</select>`;
+
+                box.innerHTML = selectHTML;
+                optsContainer.appendChild(box);
+            }
+
+            // Update Navigation Buttons
+            document.getElementById('btnPrev').disabled = index === 0;
+            if (index === questions.length - 1) {
+                document.getElementById('btnNext').innerText = 'Selesai';
+            } else {
+                document.getElementById('btnNext').innerHTML = 'Selanjutnya <i class="fas fa-chevron-right ms-1"></i>';
+            }
+
+            // Flag state
+            if (currentFlags[q.id]) {
+                document.getElementById('btnFlag').className = 'btn btn-warning';
+            } else {
+                document.getElementById('btnFlag').className = 'btn btn-outline-warning';
+            }
+
+            updateQGridStatus();
+        }
+
+        function saveMatchAnswer(qId, val) {
+            currentAnswers[qId] = val;
+            updateQGridStatus();
+        }
+
+        function prevQuestion() {
+            if (currentQIndex > 0) loadQuestion(currentQIndex - 1);
+        }
+
+        function nextQuestion() {
+            if (currentQIndex < questions.length - 1) {
+                loadQuestion(currentQIndex + 1);
+            } else {
+                confirmSubmit();
+            }
+        }
+
+        function toggleFlag() {
+            const q = questions[currentQIndex];
+            currentFlags[q.id] = !currentFlags[q.id];
+            loadQuestion(currentQIndex);
+        }
+
+        function confirmSubmit() {
+            const totalUnanswered = questions.filter(q => !hasAnswered(q.id)).length;
+            let msg = 'Apakah Anda yakin ingin menyelesaikan ujian ini?';
+            if (totalUnanswered > 0) {
+                msg = `Masih ada ${totalUnanswered} soal yang belum dijawab. Yakin ingin mengumpulkan?`;
+            }
+            if (confirm(msg)) {
+                submitExam();
+            }
+        }
+
+        /* ==========================================================================
+           SCORING & RESULT PROCESSING
+           ========================================================================== */
+        function submitExam() {
+            clearInterval(timerInterval);
+
+            // Hitung Skor
+            let correctCount = 0;
+            questions.forEach(q => {
+                const userAns = currentAnswers[q.id];
+                if (q.type === 'pg') {
+                    if (userAns === q.answer) correctCount++;
+                } else if (q.type === 'pgk') {
+                    if (Array.isArray(userAns)) {
+                        const sortedUser = [...userAns].sort().join(',');
+                        const sortedKey = [...q.answer].sort().join(',');
+                        if (sortedUser === sortedKey) correctCount++;
+                    }
+                } else if (q.type === 'match') {
+                    if (userAns === q.answer) correctCount++;
+                }
+            });
+
+            // Skala Skor 0 - 100
+            const finalScore = Math.round((correctCount / questions.length) * 100);
+            const isTuntas = finalScore >= 80;
+
+            const now = new Date();
+            const timeString = `${now.toLocaleDateString('id-ID')} ${now.toLocaleTimeString('id-ID')}`;
+
+            // Simpan Rekap jika Siswa (Bukan Uji Coba Admin)
+            if (currentUser.role === 'siswa' && !currentUser.isAdminTrial) {
+                const record = {
+                    nama: currentUser.nama,
+                    kelas: currentUser.kelas,
+                    presensi: currentUser.presensi,
+                    score: finalScore,
+                    isTuntas: isTuntas,
+                    attempt: currentUser.attemptCount,
+                    timestamp: timeString
+                };
+                studentResults.push(record);
+                localStorage.setItem('asts_results', JSON.stringify(studentResults));
+            }
+
+            // Tampilkan Layar Hasil
+            document.getElementById('resScore').innerText = finalScore;
+            document.getElementById('resKkmBadge').innerText = isTuntas ? 'TUNTAS (LULUS)' : 'BELUM TUNTAS';
+            document.getElementById('resKkmBadge').className = `badge fs-5 mt-2 ${isTuntas ? 'bg-success' : 'bg-danger'}`;
+            document.getElementById('resNama').innerText = currentUser.nama;
+            document.getElementById('resKelas').innerText = currentUser.kelas || '-';
+            document.getElementById('resPresensi').innerText = currentUser.presensi || '-';
+            document.getElementById('resTimestamp').innerText = timeString;
+            document.getElementById('resAttemptText').innerText = currentUser.isAdminTrial ? 'Uji Coba Admin' : `${currentUser.attemptCount} dari 2`;
+
+            // Tombol Coba Lagi
+            if (currentUser.role === 'siswa' && currentUser.attemptCount < 2) {
+                document.getElementById('btnReAttempt').classList.remove('d-none');
+            } else {
+                document.getElementById('btnReAttempt').classList.add('d-none');
+            }
+
+            // Render Review Jawaban
+            renderAnswerReview();
+            showScreen('screenResult');
+        }
+
+        function renderAnswerReview() {
+            const container = document.getElementById('resDetailList');
+            container.innerHTML = '';
+
+            questions.forEach((q, idx) => {
+                const userAns = currentAnswers[q.id];
+                let isCorrect = false;
+
+                if (q.type === 'pg' && userAns === q.answer) isCorrect = true;
+                if (q.type === 'pgk' && Array.isArray(userAns) && [...userAns].sort().join(',') === [...q.answer].sort().join(',')) isCorrect = true;
+                if (q.type === 'match' && userAns === q.answer) isCorrect = true;
+
+                const item = document.createElement('div');
+                item.className = `p-3 mb-2 rounded border ${isCorrect ? 'border-success bg-light-success' : 'border-danger bg-light-danger'}`;
+
+                let ansText = '<em>Tidak dijawab</em>';
+                if (q.type === 'pg' && userAns !== undefined) ansText = `${['A','B','C','D'][userAns]}. ${q.options[userAns]}`;
+                if (q.type === 'pgk' && Array.isArray(userAns)) ansText = userAns.map(i => q.options[i]).join('; ');
+                if (q.type === 'match' && userAns) ansText = userAns;
+
+                let keyText = '';
+                if (q.type === 'pg') keyText = `${['A','B','C','D'][q.answer]}. ${q.options[q.answer]}`;
+                if (q.type === 'pgk') keyText = q.answer.map(i => q.options[i]).join('; ');
+                if (q.type === 'match') keyText = q.answer;
+
+                item.innerHTML = `
+                    <div class="d-flex justify-content-between">
+                        <strong>Soal No. ${idx + 1} (${q.bab})</strong>
+                        <span class="badge ${isCorrect ? 'bg-success' : 'bg-danger'}">${isCorrect ? 'BENAR' : 'SALAH'}</span>
+                    </div>
+                    <p class="my-1">${q.question}</p>
+                    <small class="d-block">Jawaban Anda: <strong>${ansText}</strong></small>
+                    ${!isCorrect ? `<small class="d-block text-success">Kunci Jawaban: <strong>${keyText}</strong></small>` : ''}
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        function reAttemptExam() {
+            if (currentUser.attemptCount >= 2) {
+                alert('Anda telah menggunakan seluruh kesempatan pengerjaan (2 kali).');
+                return;
+            }
+            currentUser.attemptCount += 1;
+            document.getElementById('dashAttempt').innerText = `${currentUser.attemptCount} / 2`;
+            showScreen('screenSiswaDash');
+        }
+
+        /* ==========================================================================
+           ADMIN PANEL FUNCTIONS
+           ========================================================================== */
+        function renderAdminTable() {
+            const tbody = document.getElementById('adminTableBody');
+            tbody.innerHTML = '';
+
+            if (studentResults.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="9" class="text-center text-muted py-3">Belum ada data pengerjaan siswa.</td></tr>`;
+                return;
+            }
+
+            studentResults.forEach((res, idx) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${idx + 1}</td>
+                    <td class="fw-bold">${res.nama}</td>
+                    <td>${res.kelas}</td>
+                    <td>${res.presensi}</td>
+                    <td class="fw-bold text-primary">${res.score}</td>
+                    <td><span class="badge ${res.isTuntas ? 'bg-success' : 'bg-danger'}">${res.isTuntas ? 'TUNTAS' : 'BELUM TUNTAS'}</span></td>
+                    <td>${res.attempt}</td>
+                    <td><small>${res.timestamp}</small></td>
+                    <td>
+                        <button class="btn btn-danger btn-sm" onclick="deleteResult(${idx})"><i class="fas fa-trash"></i></button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function deleteResult(idx) {
+            if (confirm('Hapus rekap nilai siswa ini?')) {
+                studentResults.splice(idx, 1);
+                localStorage.setItem('asts_results', JSON.stringify(studentResults));
+                renderAdminTable();
+            }
+        }
+
+        function clearAllResults() {
+            if (confirm('Apakah Anda yakin ingin menghapus SELURUH rekap hasil nilai siswa?')) {
+                studentResults = [];
+                localStorage.setItem('asts_results', JSON.stringify(studentResults));
+                renderAdminTable();
+            }
+        }
+
+        function exportToCSV() {
+            if (studentResults.length === 0) {
+                alert('Belum ada data untuk diunduh.');
+                return;
+            }
+            let csv = 'No,Nama Lengkap,Kelas,No Presensi,Skor,Status KKM,Percobaan Ke,Waktu Pengerjaan\n';
+            studentResults.forEach((r, i) => {
+                csv += `"${i+1}","${r.nama}","${r.kelas}","${r.presensi}","${r.score}","${r.isTuntas ? 'TUNTAS' : 'BELUM TUNTAS'}","${r.attempt}","${r.timestamp}"\n`;
+            });
+
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement("a");
+            const url = URL.createObjectURL(blob);
+            link.setAttribute("href", url);
+            link.setAttribute("download", "Rekap_Nilai_Akidah_Akhlak_Kelas_VII.csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        /* --- Admin Edit Soal --- */
+        function renderAdminQList() {
+            const container = document.getElementById('adminQList');
+            if (!container) return;
+            container.innerHTML = '';
+
+            questions.forEach((q, idx) => {
+                const a = document.createElement('a');
+                a.className = 'list-group-item list-group-item-action d-flex justify-content-between align-items-center';
+                a.href = '#';
+                a.onclick = (e) => {
+                    e.preventDefault();
+                    openQEditor(idx);
+                };
+                a.innerHTML = `
+                    <div>
+                        <strong>#${idx + 1}</strong> <small class="text-muted">(${q.type.toUpperCase()})</small>
+                        <div class="text-truncate" style="max-width: 200px;">${q.question}</div>
+                    </div>
+                    <span class="badge bg-secondary">${q.bab}</span>
+                `;
+                container.appendChild(a);
+            });
+        }
+
+        function openQEditor(index) {
+            const q = questions[index];
+            const editor = document.getElementById('adminQEditor');
+
+            let html = `<h6 class="fw-bold border-bottom pb-2">Edit Soal No. ${index + 1} (${q.type.toUpperCase()})</h6>`;
+            html += `<form onsubmit="saveQuestionEdit(event, ${index})">`;
+            html += `<div class="mb-2"><label class="form-label fw-bold">Materi BAB</label><input type="text" id="edBab" class="form-control" value="${q.bab}" required></div>`;
+            html += `<div class="mb-2"><label class="form-label fw-bold">Teks Pertanyaan Soal</label><textarea id="edQuestion" class="form-control" rows="3" required>${q.question}</textarea></div>`;
+
+            if (q.type === 'pg') {
+                html += `<label class="form-label fw-bold mt-2">Opsi Jawaban (A, B, C, D)</label>`;
+                q.options.forEach((opt, oIdx) => {
+                    html += `
+                        <div class="input-group mb-2">
+                            <span class="input-group-text">${['A','B','C','D'][oIdx]}</span>
+                            <input type="text" id="edOpt_${oIdx}" class="form-control" value="${opt}" required>
+                        </div>
+                    `;
+                });
+                html += `<div class="mb-3"><label class="form-label fw-bold">Kunci Jawaban Benar</label>
+                    <select id="edKey" class="form-select">
+                        ${q.options.map((_, oIdx) => `<option value="${oIdx}" ${q.answer === oIdx ? 'selected' : ''}>Opsi ${['A','B','C','D'][oIdx]}</option>`).join('')}
+                    </select>
+                </div>`;
+            } else if (q.type === 'pgk') {
+                html += `<label class="form-label fw-bold mt-2">Opsi Jawaban (Centang mana yang kunci benar)</label>`;
+                q.options.forEach((opt, oIdx) => {
+                    const isKey = q.answer.includes(oIdx);
+                    html += `
+                        <div class="input-group mb-2">
+                            <div class="input-group-text"><input type="checkbox" id="edPgkKey_${oIdx}" ${isKey ? 'checked' : ''}></div>
+                            <input type="text" id="edOpt_${oIdx}" class="form-control" value="${opt}" required>
+                        </div>
+                    `;
+                });
+            } else if (q.type === 'match') {
+                html += `<div class="mb-2"><label class="form-label fw-bold">Pernyataan Kiri</label><input type="text" id="edMatchLeft" class="form-control" value="${q.left}" required></div>`;
+                html += `<div class="mb-2"><label class="form-label fw-bold">Kunci Pasangan Benar</label><input type="text" id="edMatchAns" class="form-control" value="${q.answer}" required></div>`;
+            }
+
+            html += `<button type="submit" class="btn btn-primary-custom w-100 fw-bold mt-2"><i class="fas fa-save me-1"></i> Simpan Perubahan Soal</button>`;
+            html += `</form>`;
+
+            editor.innerHTML = html;
+        }
+
+        function saveQuestionEdit(e, index) {
+            e.preventDefault();
+            const q = questions[index];
+            q.bab = document.getElementById('edBab').value;
+            q.question = document.getElementById('edQuestion').value;
+
+            if (q.type === 'pg') {
+                q.options = [0,1,2,3].map(i => document.getElementById(`edOpt_${i}`).value);
+                q.answer = parseInt(document.getElementById('edKey').value);
+            } else if (q.type === 'pgk') {
+                q.options = [0,1,2,3].map(i => document.getElementById(`edOpt_${i}`).value);
+                q.answer = [0,1,2,3].filter(i => document.getElementById(`edPgkKey_${i}`).checked);
+            } else if (q.type === 'match') {
+                q.left = document.getElementById('edMatchLeft').value;
+                q.answer = document.getElementById('edMatchAns').value;
+                if (!q.rightOptions.includes(q.answer)) {
+                    q.rightOptions.push(q.answer);
+                }
+            }
+
+            localStorage.setItem('asts_questions', JSON.stringify(questions));
+            alert('Soal berhasil diperbarui!');
+            renderAdminQList();
+            openQEditor(index);
+        }
+
+        function resetDefaultQuestions() {
+            if (confirm('Kembalikan seluruh 35 soal ke pengaturan awal default?')) {
+                questions = DEFAULT_QUESTIONS;
+                localStorage.setItem('asts_questions', JSON.stringify(questions));
+                renderAdminQList();
+                document.getElementById('adminQEditor').innerHTML = '<p class="text-muted">Pilih nomor soal di sebelah kiri untuk diedit.</p>';
+                alert('Soal telah di-reset ke default.');
+            }
+        }
+
+        /* --- Admin Uji Coba --- */
+        function startAdminUjiCoba() {
+            currentUser = {
+                role: 'admin',
+                nama: 'Uji Coba Admin (Guru)',
+                kelas: 'VII (Demo)',
+                presensi: '00',
+                attemptCount: 1,
+                isAdminTrial: true
+            };
+            startExam();
+        }
+
+        /* --- Admin Config & Pass --- */
+        function saveHeaderConfig(e) {
+            e.preventDefault();
+            headerConfig = {
+                title: document.getElementById('cfgTitle').value,
+                subtitle: document.getElementById('cfgSubtitle').value,
+                logo: document.getElementById('cfgLogo').value
+            };
+            localStorage.setItem('asts_header', JSON.stringify(headerConfig));
+            applyHeaderConfig();
+            alert('Pengaturan Header & Logo berhasil disimpan!');
+        }
+
+        function changeAdminPassword(e) {
+            e.preventDefault();
+            const newP = document.getElementById('newAdminPass').value;
+            adminPass = newP;
+            localStorage.setItem('asts_admin_pass', adminPass);
+            alert('Password Admin berhasil diubah!');
+            document.getElementById('newAdminPass').value = '';
+        }
+    </script>
+</body>
+</html>
